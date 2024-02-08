@@ -231,7 +231,8 @@ def train(models, eq, train_dataloaders, eval_dataloaders, optimizers, lr_schedu
 
         # Update the learning rate as needed
         if lr_schedulers is not None:
-            lr_schedulers.step()
+            lr_schedulers.scheduler_u.step()
+            lr_schedulers.scheduler_v.step()
 
         if train_config.run_validation:
             eval_ppl, eval_epoch_loss, temp_val_loss, temp_step_perplexity = evaluation(models, eq, train_config, eval_dataloaders, local_rank)
