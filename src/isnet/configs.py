@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-class eq_configs:
+class eq_config:
     name: int = "Poisson"
     d: int = 2
 
