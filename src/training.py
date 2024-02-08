@@ -239,16 +239,17 @@ def main(**kwargs):
             weight_decay=train_config.weight_decay,
         )
     else:
-        optimizers.optim_u = optim.AdamW(
-            models.unet.parameters(),
-            lr=train_config.lr,
-            weight_decay=train_config.weight_decay,
-        )
-        optimizers.optim_v = optim.AdamW(
-            models.vnet.parameters(),
-            lr=train_config.lr,
-            weight_decay=train_config.weight_decay,
-        )
+        pass
+        # optimizers.optim_u = optim.AdamW(
+        #     models.unet.parameters(),
+        #     lr=train_config.lr,
+        #     weight_decay=train_config.weight_decay,
+        # )
+        # optimizers.optim_v = optim.AdamW(
+        #     models.vnet.parameters(),
+        #     lr=train_config.lr,
+        #     weight_decay=train_config.weight_decay,
+        # )
     schedulers = op()
     schedulers.scheduler_u = StepLR(optimizers.optim_u, step_size=train_config.lr_step_size, gamma=train_config.gamma) # 
     schedulers.scheduler_v = StepLR(optimizers.optim_v, step_size=train_config.lr_step_size, gamma=train_config.gamma) # 
