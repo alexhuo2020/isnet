@@ -11,6 +11,8 @@ class data_config:
     num_ext: int = 100
     batch_size: int = 1000
     d: int = 2
+    box_low: float = -1.0
+    box_high: float = 1.0
 
 
 @dataclass
