@@ -173,7 +173,7 @@ def main(**kwargs):
     #     split="test",
     # )
     if not train_config.enable_fsdp or rank == 0:
-            print(f"--> Validation Set Length = {len(dataset_x_val)}")
+            print(f"--> Validation Set Length = {len(dataset_x_eval)}")
 
     # if train_config.batching_strategy == "packing":
     #     dataset_train = ConcatDataset(dataset_train, chunk_size=train_config.context_length)
