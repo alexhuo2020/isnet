@@ -30,13 +30,13 @@ def load_equation(eq_config):
         f = lambda x: eq_config.d*torch.pi**2/4*torch.prod(torch.stack([torch.cos(torch.pi*x[:,k]/2) for k in range(eq_config.d)]),0)
         g = lambda x: 0
         ur = lambda x: torch.prod(torch.stack([torch.cos(torch.pi*x[:,k]/2) for k in range(eq_config.d)]),0)
-        eq = Poisson(eq.d, f, g, opA, opB, ur)
+        eq = Poisson(eq_config.d, f, g, opA, opB, ur)
         return eq 
     elif eq_config.name == "semilinear":
         f = lambda x:  -(2*eq_config.d+2)*torch.sum(x,dim=-1)
         ur = lambda x: 1 + torch.sum(x**2,dim=-1) 
         g = ur
-        eq = Poisson(eq.d, f, g, opA_semilinear, opB, ur)
+        eq = Poisson(eq_config.d, f, g, opA_semilinear, opB, ur)
         return eq 
     elif eq_config.name == "nonlinear":
         f = lambda x: 0.
@@ -45,13 +45,13 @@ def load_equation(eq_config):
         g = lambda x: 0
         a_x = lambda x: (1 + x[:,0])**m
         opA = partial(opA_nonlinear,a=a_x)
-        eq = Poisson(eq.d, f, g, opA, opB_nonlinear, ur)
+        eq = Poisson(eq_config.d, f, g, opA, opB_nonlinear, ur)
         return eq
     elif eq_config.name == "mixedBC":
         g = lambda x: torch.sin(5*x[:,0])*((x==1)[:,1] + (x==0)[:,1])
         def f(x):
             return 10*torch.exp(-(((x[:,0]-0.5)**2 + (x[:,1]-0.5)**2))/0.02)
-        eq = Poisson(eq.d, f, g, opA, opB_mixed, ur)
+        eq = Poisson(eq_config.d, f, g, opA, opB_mixed, ur)
         return eq
     else:
        print("equation not implemented!")
