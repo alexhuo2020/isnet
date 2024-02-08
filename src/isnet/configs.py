@@ -6,7 +6,7 @@ class model_config:
     d: int = 2
 
 class data_config:
-    dataname = 'box'
+    name = 'box'
     num_int: int = 10000
     num_ext: int = 100
     batch_size: int = 1000
