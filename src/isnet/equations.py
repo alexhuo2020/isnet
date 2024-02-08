@@ -25,7 +25,7 @@ class Poisson:
     return (torch.linalg.norm(uf(x) - self.ur(x))) / (torch.linalg.norm(self.ur(x)))
 
 
-def load_equations(eq_config):
+def load_equation(eq_config):
     if eq_config.name == "Poisson":
         f = lambda x: eq_config.d*torch.pi**2/4*torch.prod(torch.stack([torch.cos(torch.pi*x[:,k]/2) for k in range(eq_config.d)]),0)
         g = lambda x: 0
