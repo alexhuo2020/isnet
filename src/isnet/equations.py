@@ -1,7 +1,10 @@
 """define the equation"""
 import torch
 from torch.autograd import grad
-class StokesEQ:
+from functools import partial
+
+from .operators_equation import opA, opB, opA_nonlinear, opB_nonlinear, opA_semilinear, opB_mixed
+class Poisson:
   """
   the class of infsupnet
   :param d: dimension of domain
@@ -11,7 +14,7 @@ class StokesEQ:
   :param B: the operator for the boundary condition
 
   """
-  def __init__(self, d, f, g, nu, ur=None):
+  def __init__(self, d, f, g, opA, opB, ur=None):
     self.d = d
     self.f = f
     self.g = g
@@ -21,20 +24,42 @@ class StokesEQ:
   def compute_err(self,uf,x):
     return (torch.linalg.norm(uf(x) - self.ur(x))) / (torch.linalg.norm(self.ur(x)))
 
-def opA(u,x):
-    d = len(x[0])
-    #Compute Laplacian
-    u_x = grad(u, x,
-                    create_graph=True, retain_graph=True,
-                    grad_outputs=torch.ones_like(u),
-                    allow_unused=True)[0]
-    u_xx = 0
-    for i in range(d):
-        u_xx += grad(u_x[:,i], x, retain_graph=True,
-                        create_graph=True,
-                        grad_outputs=torch.ones_like(u_x[:,i]),
-                        allow_unused=True)[0][:,i]
-    return u_xx
 
-def opB(u,x):
-   return u.squeeze()
+def load_equations(eq_config):
+    if eq_config.name == "Poisson":
+        f = lambda x: eq_config.d*torch.pi**2/4*torch.prod(torch.stack([torch.cos(torch.pi*x[:,k]/2) for k in range(eq_config.d)]),0)
+        g = lambda x: 0
+        ur = lambda x: torch.prod(torch.stack([torch.cos(torch.pi*x[:,k]/2) for k in range(eq_config.d)]),0)
+        eq = Poisson(eq.d, f, g, opA, opB, ur)
+        return eq 
+    elif eq_config.name == "semilinear":
+        f = lambda x:  -(2*eq_config.d+2)*torch.sum(x,dim=-1)
+        ur = lambda x: 1 + torch.sum(x**2,dim=-1) 
+        g = ur
+        eq = Poisson(eq.d, f, g, opA_semilinear, opB, ur)
+        return eq 
+    elif eq_config.name == "nonlinear":
+        f = lambda x: 0.
+        m = 3
+        ur = lambda x: ((2**(m+1)-1)*x[:,0]+1)**(1/(m+1)) - 1.
+        g = lambda x: 0
+        a_x = lambda x: (1 + x[:,0])**m
+        opA = partial(opA_nonlinear,a=a_x)
+        eq = Poisson(eq.d, f, g, opA, opB_nonlinear, ur)
+        return eq
+    elif eq_config.name == "mixedBC":
+        g = lambda x: torch.sin(5*x[:,0])*((x==1)[:,1] + (x==0)[:,1])
+        def f(x):
+            return 10*torch.exp(-(((x[:,0]-0.5)**2 + (x[:,1]-0.5)**2))/0.02)
+        eq = Poisson(eq.d, f, g, opA, opB_mixed, ur)
+        return eq
+    else:
+       print("equation not implemented!")
+       raise NotImplementedError
+
+
+
+       
+    
+
+   

@@ -3,9 +3,9 @@
 
 
 import torch 
-from isnet.configs import model_config, data_config, train_config
+from isnet.configs import model_config, data_config, train_config, eq_config
 from isnet.models import MODELS, load_model
-from isnet.equations import StokesEQ
+from isnet.equations import load_equation
 from isnet.models_transformer import GPT, GPTConfig
 from isnet.dataset import load_dataset
 
@@ -256,7 +256,7 @@ def main(**kwargs):
     train_dataloaders = train_dataloader_x, train_dataloader_xb
     eval_dataloaders = eval_dataloader_x, eval_dataloader_xb
 
-    eq = StokesEQ(d=2, f=lambda x:0, g=lambda x:0, nu=1, ur=None)
+    eq = load_equation(eq_config)#Poisson(d=2, f=lambda x:0, g=lambda x:0, nu=1, ur=None)
     train_config.save_metrics=False
     train_config.gradient_clipping=False
     train_config.run_validation = False

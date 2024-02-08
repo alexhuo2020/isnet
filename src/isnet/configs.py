@@ -1,4 +1,9 @@
 from dataclasses import dataclass
+
+class eq_configs:
+    name: int = "Poisson"
+    d: int = 2
+
 class model_config:
     names = "MLP"
     hdim: int = 40
