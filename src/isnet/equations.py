@@ -2,7 +2,7 @@
 import torch
 from torch.autograd import grad
 from functools import partial
-import .operators_equation as op
+import isnet.operators_equation as op
 # from operators_equation import opA, opB, opA_nonlinear, opB_nonlinear, opA_semilinear, opB_mixed
 class Poisson:
   """
