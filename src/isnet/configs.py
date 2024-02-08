@@ -35,7 +35,7 @@ class train_config:
     seed: int=42
     use_fp16: bool=False
     mixed_precision: bool=True
-    val_batch_size: int=1
+    # val_batch_size: int=1
     dataset = "box"
     peft_method: str = "lora" # None , llama_adapter, prefix
     use_peft: bool=False

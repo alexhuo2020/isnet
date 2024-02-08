@@ -30,7 +30,7 @@ from torch.optim.lr_scheduler import StepLR
 # from transformers.models.llama.modeling_llama import LlamaDecoderLayer
 
 from llama_recipes.configs import fsdp_config as FSDP_CONFIG
-from llama_recipes.configs import train_config as TRAIN_CONFIG
+# from llama_recipes.configs import train_config as TRAIN_CONFIG
 # from llama_recipes.data.concatenator import ConcatDataset
 from llama_recipes.policies import AnyPrecisionAdamW, apply_fsdp_checkpointing
 
@@ -56,7 +56,8 @@ from accelerate.utils import is_xpu_available
 
 def main(**kwargs):
     # Update the configuration for the training and sharding process
-    train_config, fsdp_config = TRAIN_CONFIG(), FSDP_CONFIG()
+    # train_config, fsdp_config = TRAIN_CONFIG(), FSDP_CONFIG()
+    fsdp_config = FSDP_CONFIG()
     update_config((train_config, fsdp_config), **kwargs)
 
     # Set the seeds for reproducibility
